@@ -6,7 +6,6 @@ using System.Drawing;
 
 namespace MathDetecting.Algorithms.Segmentation
 {
-    //233
     public sealed class Symbol :IDisposable
     {
         private Bitmap _image;
