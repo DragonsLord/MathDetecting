@@ -1,7 +1,0 @@
-F:\Projects\GitHub\MathDetecting\MathDetecting\bin\Debug\MathDetecting.exe.config
-E:\Library\MathDetecting\MathDetecting\bin\Debug\MathDetecting.exe.config
-E:\Library\MathDetecting\MathDetecting\bin\Debug\MathDetecting.exe
-E:\Library\MathDetecting\MathDetecting\bin\Debug\MathDetecting.pdb
-E:\Library\MathDetecting\MathDetecting\obj\Debug\MathDetecting.csprojResolveAssemblyReference.cache
-E:\Library\MathDetecting\MathDetecting\obj\Debug\MathDetecting.exe
-E:\Library\MathDetecting\MathDetecting\obj\Debug\MathDetecting.pdb
