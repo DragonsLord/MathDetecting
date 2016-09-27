@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MathDetecting
+using MathDetecting.Algorithms.Segmentation;
+
+namespace ConsoleOutput
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
 
         }
