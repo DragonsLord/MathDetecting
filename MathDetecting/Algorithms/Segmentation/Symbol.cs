@@ -28,6 +28,7 @@ namespace MathDetecting.Algorithms.Segmentation
             position[1] = d2;
             position[2] = d3;
             position[3] = d4;
+
             _image = FormatImage.ResizeImage(image, 50, 50);
             FormatImage.ChangeImage(_image);         
         }
