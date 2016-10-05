@@ -11,37 +11,11 @@ namespace MathDetecting.Algorithms.Segmentation
 
         private const double left_k = 0;
         private const double right_k = 0;
-        public static List<Bitmap> GetSymbolsByColumns(Bitmap image)
+        public static List<Bitmap> GetSymbolsByColumns(Bitmap image, bool cut = true)
         {
             List<Bitmap> symbs = new List<Bitmap>();
             using (Bitmap copy = (Bitmap)image.Clone())
             {
-                #region Spread Symbols
-                //for (int i = 0; i < copy.Width; i += 2)
-                //{
-                //    for (int j = 0; j < copy.Height; j += 2)
-                //    {
-                //        Color color = copy.GetPixel(i, j);
-                //        if (GetBrightness(color) > 150)
-                //        {
-                //            copy.SetPixel(i, j, Color.Black);
-                //            copy.SetPixel(i, j - 1, Color.Black);
-                //            copy.SetPixel(i, j + 1, Color.Black);
-                //            copy.SetPixel(i - 1, j, Color.Black);
-                //            copy.SetPixel(i - 1, j + 1, Color.Black);
-                //            copy.SetPixel(i - 1, j - 1, Color.Black);
-                //            copy.SetPixel(i + 1, j, Color.Black);
-                //            copy.SetPixel(i + 1, j + 1, Color.Black);
-                //            copy.SetPixel(i + 1, j - 1, Color.Black);
-                //        }
-                //        else
-                //        {
-                //            copy.SetPixel(i, j, Color.White);
-                //        }
-                //    }
-                //}
-                #endregion
-
                 int[] ColumnBrightnes = new int[copy.Width];
                 for (int i = 0; i < copy.Width; i++)
                 {
@@ -80,10 +54,102 @@ namespace MathDetecting.Algorithms.Segmentation
                         g.FillRectangle(Brushes.White, 0, 0, b.Width, b.Height);
                         g.DrawImage(image, new Rectangle(2, 2, b.Width - 2, b.Height - 2), new Rectangle(bounds[i], 0, b.Width - 4, b.Height - 4), GraphicsUnit.Pixel);
                     }
-                    symbs.Add(CutText(b));
+                    if (cut)
+                        b = CutText(b);
+                    symbs.Add(b);
                 }
             }
             return symbs;
+        }
+
+        public static SymbolPosition CutAndGetPosition(ref Bitmap image)
+        {
+            bool find = false;
+            int left, right, bottom, top;
+            int i = 0;
+
+            #region Edges
+            while (!find)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color color = image.GetPixel(i, j);
+                    if (GetBrightness(color) > 120)
+                    {
+                        find = true;
+                        break;
+                    }
+                }
+                i++;
+            }
+            left = i - 1;
+            find = false;
+            i = image.Width - 1;
+            while (!find)
+            {
+                for (int j = 0; j < image.Height; j++)
+                {
+                    Color color = image.GetPixel(i, j);
+                    if (GetBrightness(color) > 120)
+                    {
+                        find = true;
+                        break;
+                    }
+                }
+                i--;
+            }
+            right = i + 1;
+            find = false;
+            i = 0;
+            while (!find)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    Color color = image.GetPixel(j, i);
+                    if (GetBrightness(color) > 120)
+                    {
+                        find = true;
+                        break;
+                    }
+                }
+                i++;
+            }
+            bottom = i - 1;
+            find = false;
+            i = image.Height - 1;
+            while (!find)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    Color color = image.GetPixel(j, i);
+                    if (GetBrightness(color) > 120)
+                    {
+                        find = true;
+                        break;
+                    }
+                }
+                i--;
+            }
+            top = i + 1;
+            #endregion
+
+            SymbolPosition position = SymbolPosition.None;
+            int middle = image.Height / 2;
+            if (bottom > middle)
+                position = SymbolPosition.Bottom;
+            else if (top < middle)
+                position = SymbolPosition.Top;
+            else position = SymbolPosition.Middle;
+
+            Bitmap b = new Bitmap(right - left + 4, top - bottom + 4);
+            using (Graphics g = Graphics.FromImage(b))
+            {
+                g.FillRectangle(Brushes.White, 0, 0, b.Width, b.Height);
+                g.DrawImage(image, new Rectangle(2, 2, b.Width - 4, b.Height - 4), new Rectangle(left, bottom, right - left + 1, top - bottom + 1), GraphicsUnit.Pixel);
+            }
+            image = b;
+
+            return position;
         }
 
         public static List<Bitmap> GetSymbolsByRows(Bitmap image)

@@ -32,15 +32,15 @@ namespace MathDetecting.Algorithms.Segmentation
                                 sym.Add(new Point(i - 1, j));
                             }
                         }
-                        if (j > 1)
-                        {
-                            color = bm.GetPixel(i, j - 1);
-                            if (Segmentation.GetBrightness(bm.GetPixel(i, j-1)) < 100)
-                            {
-                                bm.SetPixel(i, j - 1, Color.Black);
-                                sym.Add(new Point(i, j - 1));
-                            }
-                        }
+                        //if (j > 1)
+                        //{
+                        //    color = bm.GetPixel(i, j - 1);
+                        //    if (Segmentation.GetBrightness(bm.GetPixel(i, j-1)) < 100)
+                        //    {
+                        //        bm.SetPixel(i, j - 1, Color.Black);
+                        //        sym.Add(new Point(i, j - 1));
+                        //    }
+                        //}
                     }
                     else
                     {

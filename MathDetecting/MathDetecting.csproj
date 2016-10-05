@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\Recognition\NeuralNetwork.cs" />
     <Compile Include="Algorithms\Segmentation\FormatImage.cs" />
     <Compile Include="Algorithms\Segmentation\Segmentation.cs" />
     <Compile Include="Algorithms\Segmentation\Symbol.cs" />
