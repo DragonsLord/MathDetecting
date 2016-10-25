@@ -13,8 +13,8 @@ namespace MathDetecting.Algorithms.Recognition
     {
 
         // адрес и порт сервера, к которому будем подключаться
-        static const int port = 8005; // порт сервера
-        static const string address = "127.0.0.1"; // адрес сервера
+        const int port = 8005; // порт сервера
+        const string address = "127.0.0.1"; // адрес сервера
         public static char Recognize(Bitmap image)
         {
             //char symbol = '0';

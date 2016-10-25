@@ -33,7 +33,7 @@ namespace MathDetecting
             List<Symbol> symbols = new List<Symbol>();
             using (Bitmap b = Segmentation.CutText(image))
             {
-                symbols = Symbol.GetSymbols(b);
+                symbols = Segmentation.FullBruteSegmentation(b);
             }
 
             //TODO: Build expression

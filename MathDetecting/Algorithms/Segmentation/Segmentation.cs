@@ -62,95 +62,95 @@ namespace MathDetecting.Algorithms.Segmentation
             return symbs;
         }
 
-        public static SymbolPosition CutAndGetPosition(ref Bitmap image)
-        {
-            bool find = false;
-            int left, right, bottom, top;
-            int i = 0;
+        //public static SymbolPosition CutAndGetPosition(ref Bitmap image)
+        //{
+        //    bool find = false;
+        //    int left, right, bottom, top;
+        //    int i = 0;
 
-            #region Edges
-            while (!find)
-            {
-                for (int j = 0; j < image.Height; j++)
-                {
-                    Color color = image.GetPixel(i, j);
-                    if (GetBrightness(color) > 120)
-                    {
-                        find = true;
-                        break;
-                    }
-                }
-                i++;
-            }
-            left = i - 1;
-            find = false;
-            i = image.Width - 1;
-            while (!find)
-            {
-                for (int j = 0; j < image.Height; j++)
-                {
-                    Color color = image.GetPixel(i, j);
-                    if (GetBrightness(color) > 120)
-                    {
-                        find = true;
-                        break;
-                    }
-                }
-                i--;
-            }
-            right = i + 1;
-            find = false;
-            i = 0;
-            while (!find)
-            {
-                for (int j = 0; j < image.Width; j++)
-                {
-                    Color color = image.GetPixel(j, i);
-                    if (GetBrightness(color) > 120)
-                    {
-                        find = true;
-                        break;
-                    }
-                }
-                i++;
-            }
-            bottom = i - 1;
-            find = false;
-            i = image.Height - 1;
-            while (!find)
-            {
-                for (int j = 0; j < image.Width; j++)
-                {
-                    Color color = image.GetPixel(j, i);
-                    if (GetBrightness(color) > 120)
-                    {
-                        find = true;
-                        break;
-                    }
-                }
-                i--;
-            }
-            top = i + 1;
-            #endregion
+        //    #region Edges
+        //    while (!find)
+        //    {
+        //        for (int j = 0; j < image.Height; j++)
+        //        {
+        //            Color color = image.GetPixel(i, j);
+        //            if (GetBrightness(color) > 120)
+        //            {
+        //                find = true;
+        //                break;
+        //            }
+        //        }
+        //        i++;
+        //    }
+        //    left = i - 1;
+        //    find = false;
+        //    i = image.Width - 1;
+        //    while (!find)
+        //    {
+        //        for (int j = 0; j < image.Height; j++)
+        //        {
+        //            Color color = image.GetPixel(i, j);
+        //            if (GetBrightness(color) > 120)
+        //            {
+        //                find = true;
+        //                break;
+        //            }
+        //        }
+        //        i--;
+        //    }
+        //    right = i + 1;
+        //    find = false;
+        //    i = 0;
+        //    while (!find)
+        //    {
+        //        for (int j = 0; j < image.Width; j++)
+        //        {
+        //            Color color = image.GetPixel(j, i);
+        //            if (GetBrightness(color) > 120)
+        //            {
+        //                find = true;
+        //                break;
+        //            }
+        //        }
+        //        i++;
+        //    }
+        //    bottom = i - 1;
+        //    find = false;
+        //    i = image.Height - 1;
+        //    while (!find)
+        //    {
+        //        for (int j = 0; j < image.Width; j++)
+        //        {
+        //            Color color = image.GetPixel(j, i);
+        //            if (GetBrightness(color) > 120)
+        //            {
+        //                find = true;
+        //                break;
+        //            }
+        //        }
+        //        i--;
+        //    }
+        //    top = i + 1;
+        //    #endregion
 
-            SymbolPosition position = SymbolPosition.None;
-            int middle = image.Height / 2;
-            if (bottom > middle)
-                position = SymbolPosition.Bottom;
-            else if (top < middle)
-                position = SymbolPosition.Top;
-            else position = SymbolPosition.Middle;
+        //    SymbolPosition position = SymbolPosition.None;
+        //    int middle = image.Height / 2;
+        //    if (bottom > middle)
+        //        position = SymbolPosition.Bottom;
+        //    else if (top < middle)
+        //        position = SymbolPosition.Top;
+        //    else position = SymbolPosition.Middle;
 
-            Bitmap b = new Bitmap(right - left + 4, top - bottom + 4);
-            using (Graphics g = Graphics.FromImage(b))
-            {
-                g.FillRectangle(Brushes.White, 0, 0, b.Width, b.Height);
-                g.DrawImage(image, new Rectangle(2, 2, b.Width - 4, b.Height - 4), new Rectangle(left, bottom, right - left + 1, top - bottom + 1), GraphicsUnit.Pixel);
-            }
-            image = b;
+        //    Bitmap b = new Bitmap(right - left + 4, top - bottom + 4);
+        //    using (Graphics g = Graphics.FromImage(b))
+        //    {
+        //        g.FillRectangle(Brushes.White, 0, 0, b.Width, b.Height);
+        //        g.DrawImage(image, new Rectangle(2, 2, b.Width - 4, b.Height - 4), new Rectangle(left, bottom, right - left + 1, top - bottom + 1), GraphicsUnit.Pixel);
+        //    }
+        //    image = b;
 
-            return position;
-        }
+        //    return position;
+        //}
 
         public static List<Bitmap> GetSymbolsByRows(Bitmap image)
         {
@@ -381,6 +381,123 @@ namespace MathDetecting.Algorithms.Segmentation
                         foreach (var point in symbol_pixels)
                             b.SetPixel(point.X - left + 2, point.Y - bottom + 2, Color.Black);
                         symbols.Add(b);
+                    }
+                }
+            }
+            return symbols;
+        }
+
+        //Current Segmentation Method
+        public static List<Symbol> FullBruteSegmentation(Bitmap bt)
+        {
+            List<Symbol> symbols = new List<Symbol>();
+            Color color;
+            for (int i = 2; i < bt.Width - 2; i++)
+            {
+                for (int j = 2; j < bt.Height - 2; j++)
+                {
+                    color = bt.GetPixel(i, j);
+                    if (GetBrightness(color) > 200)
+                    {
+                        List<Point> path = new List<Point>() { new Point(i, j) };
+                        List<Point> symbol_pixels = new List<Point>();
+                        int right = int.MinValue, left = int.MaxValue, top = int.MinValue, bottom = int.MaxValue;
+
+                        #region Pathing
+                        while (path.Count != 0)
+                        {
+                            int x = path[0].X;
+                            int y = path[0].Y;
+                            bt.SetPixel(x, y, Color.White);
+                            if (x > right)
+                                right = x;
+                            if (y > top)
+                                top = y;
+                            if (y < bottom)
+                                bottom = y;
+                            if (x < left)
+                                left = x;
+                            Point p = new Point(x, y);
+                            symbol_pixels.Add(p);
+                            if (y + 1 < bt.Height)
+                            {
+                                color = bt.GetPixel(x, y + 1);
+                                p.Y = y + 1;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x, y + 1));
+
+                                if (x + 1 < bt.Width)
+                                {
+                                    color = bt.GetPixel(x + 1, y + 1);
+                                    p.X = x + 1;
+                                    p.Y = y + 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x + 1, y + 1));
+                                }
+
+                                if (x - 1 > 0)
+                                {
+                                    color = bt.GetPixel(x - 1, y + 1);
+                                    p.X = x - 1;
+                                    p.Y = y + 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x - 1, y + 1));
+                                }
+                            }
+                            if (y - 1 > 0)
+                            {
+                                color = bt.GetPixel(x, y - 1);
+                                p.X = x;
+                                p.Y = y - 1;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x, y - 1));
+
+                                if (x + 1 < bt.Width)
+                                {
+                                    color = bt.GetPixel(x + 1, y - 1);
+                                    p.X = x + 1;
+                                    p.Y = y - 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x + 1, y - 1));
+                                }
+
+                                if (x - 1 > 0)
+                                {
+                                    color = bt.GetPixel(x - 1, y - 1);
+                                    p.X = x - 1;
+                                    p.Y = y - 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x - 1, y - 1));
+                                }
+                            }
+                            if (x + 1 < bt.Width)
+                            {
+                                color = bt.GetPixel(x + 1, y);
+                                p.X = x + 1;
+                                p.Y = y;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x + 1, y));
+                            }
+                            if (x - 1 > 0)
+                            {
+                                color = bt.GetPixel(x - 1, y);
+                                p.X = x - 1;
+                                p.Y = y;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x - 1, y));
+                            }
+                            path.RemoveAt(0);
+                        }
+                        #endregion
+
+                        Bitmap b = new Bitmap(right - left + 4, top - bottom + 4);
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            g.FillRectangle(Brushes.White, 0, 0, b.Width, b.Height);
+                        }
+                        foreach (var point in symbol_pixels)
+                            b.SetPixel(point.X - left + 2, point.Y - bottom + 2, Color.Black);
+                        symbols.Add(new Symbol(b, (left + right) / 2, (bottom + top) / 2, right - left, top - bottom));
                     }
                 }
             }
