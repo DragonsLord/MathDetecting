@@ -386,5 +386,122 @@ namespace MathDetecting.Algorithms.Segmentation
             }
             return symbols;
         }
+
+        //Current Segmentation Method
+        public static List<Symbol> FullBruteSegmentation(Bitmap bt)
+        {
+            List<Symbol> symbols = new List<Symbol>();
+            Color color;
+            for (int i = 2; i < bt.Width - 2; i++)
+            {
+                for (int j = 2; j < bt.Height - 2; j++)
+                {
+                    color = bt.GetPixel(i, j);
+                    if (GetBrightness(color) > 200)
+                    {
+                        List<Point> path = new List<Point>() { new Point(i, j) };
+                        List<Point> symbol_pixels = new List<Point>();
+                        int right = int.MinValue, left = int.MaxValue, top = int.MinValue, bottom = int.MaxValue;
+
+                        #region Pathing
+                        while (path.Count != 0)
+                        {
+                            int x = path[0].X;
+                            int y = path[0].Y;
+                            bt.SetPixel(x, y, Color.White);
+                            if (x > right)
+                                right = x;
+                            if (y > top)
+                                top = y;
+                            if (y < bottom)
+                                bottom = y;
+                            if (x < left)
+                                left = x;
+                            Point p = new Point(x, y);
+                            symbol_pixels.Add(p);
+                            if (y + 1 < bt.Height)
+                            {
+                                color = bt.GetPixel(x, y + 1);
+                                p.Y = y + 1;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x, y + 1));
+
+                                if (x + 1 < bt.Width)
+                                {
+                                    color = bt.GetPixel(x + 1, y + 1);
+                                    p.X = x + 1;
+                                    p.Y = y + 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x + 1, y + 1));
+                                }
+
+                                if (x - 1 > 0)
+                                {
+                                    color = bt.GetPixel(x - 1, y + 1);
+                                    p.X = x - 1;
+                                    p.Y = y + 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x - 1, y + 1));
+                                }
+                            }
+                            if (y - 1 > 0)
+                            {
+                                color = bt.GetPixel(x, y - 1);
+                                p.X = x;
+                                p.Y = y - 1;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x, y - 1));
+
+                                if (x + 1 < bt.Width)
+                                {
+                                    color = bt.GetPixel(x + 1, y - 1);
+                                    p.X = x + 1;
+                                    p.Y = y - 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x + 1, y - 1));
+                                }
+
+                                if (x - 1 > 0)
+                                {
+                                    color = bt.GetPixel(x - 1, y - 1);
+                                    p.X = x - 1;
+                                    p.Y = y - 1;
+                                    if (GetBrightness(color) > 200 && !path.Contains(p))
+                                        path.Add(new Point(x - 1, y - 1));
+                                }
+                            }
+                            if (x + 1 < bt.Width)
+                            {
+                                color = bt.GetPixel(x + 1, y);
+                                p.X = x + 1;
+                                p.Y = y;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x + 1, y));
+                            }
+                            if (x - 1 > 0)
+                            {
+                                color = bt.GetPixel(x - 1, y);
+                                p.X = x - 1;
+                                p.Y = y;
+                                if (GetBrightness(color) > 200 && !path.Contains(p))
+                                    path.Add(new Point(x - 1, y));
+                            }
+                            path.RemoveAt(0);
+                        }
+                        #endregion
+
+                        Bitmap b = new Bitmap(right - left + 4, top - bottom + 4);
+                        using (Graphics g = Graphics.FromImage(b))
+                        {
+                            g.FillRectangle(Brushes.White, 0, 0, b.Width, b.Height);
+                        }
+                        foreach (var point in symbol_pixels)
+                            b.SetPixel(point.X - left + 2, point.Y - bottom + 2, Color.Black);
+                        symbols.Add(new Symbol(b, (left + right) / 2, (bottom + top) / 2, right - left, top - bottom));
+                    }
+                }
+            }
+            return symbols;
+        }
     }
 }
