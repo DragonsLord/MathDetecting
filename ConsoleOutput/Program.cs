@@ -13,7 +13,7 @@ namespace ConsoleOutput
         static void Main()
         {
             List<Symbol> symbols = new List<Symbol>();
-            Bitmap image = Segmentation.CutText(new Bitmap("input.jpeg"));
+            Bitmap image = Segmentation.CutText(new Bitmap("formula.jpeg"));
             {
                 symbols = Symbol.GetSymbols(image);
             }
