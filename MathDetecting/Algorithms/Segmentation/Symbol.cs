@@ -58,13 +58,13 @@ namespace MathDetecting.Algorithms.Segmentation
                 case MergeDirection.Up:
                 case MergeDirection.Down: { 
                     width = Math.Max(s1.OriginalSize.Width, s2.OriginalSize.Width) + 4;
-                    height = s1.OriginalSize.Height + s2.OriginalSize.Height + 8;
+                    height = s1.OriginalSize.Height + s2.OriginalSize.Height + 12;
                     break;
                 }
                 case MergeDirection.Left:
                 case MergeDirection.Right: {
                     height = Math.Max(s1.OriginalSize.Height, s2.OriginalSize.Height) + 4;
-                    width = s1.OriginalSize.Width + s2.OriginalSize.Width + 8;
+                    width = s1.OriginalSize.Width + s2.OriginalSize.Width + 12;
                     break;
                 }
             }
@@ -75,8 +75,8 @@ namespace MathDetecting.Algorithms.Segmentation
                 case MergeDirection.Up: {
                     using (Graphics g = Graphics.FromImage(merged_image))
                     {
-                        g.DrawImageUnscaled(s2.Image, width/2 - s2.OriginalSize.Width / 2, 0);
-                        g.DrawImageUnscaled(s1.Image, 0, s2.OriginalSize.Height + 4);
+                        g.DrawImageUnscaled(s2.Image, (width / 2) - (s2.OriginalSize.Width / 2) - 2, 0);
+                        g.DrawImageUnscaled(s1.Image, 0, s2.OriginalSize.Height + 8);
                         break;
                     }
                 }
@@ -84,7 +84,7 @@ namespace MathDetecting.Algorithms.Segmentation
                     using (Graphics g = Graphics.FromImage(merged_image))
                     {
                         g.DrawImageUnscaled(s1.Image, 0, 0);
-                        g.DrawImageUnscaled(s2.Image, width / 2 - s2.OriginalSize.Width / 2, s2.OriginalSize.Height + 4);
+                        g.DrawImageUnscaled(s2.Image, (width / 2) - (s2.OriginalSize.Width / 2) - 2, s2.OriginalSize.Height + 8);
                         break;
                     }
                 }
@@ -92,7 +92,7 @@ namespace MathDetecting.Algorithms.Segmentation
                     using (Graphics g = Graphics.FromImage(merged_image))
                     {
                         g.DrawImageUnscaled(s2.Image, 0, height / 2 - s2.OriginalSize.Height / 2);
-                        g.DrawImageUnscaled(s1.Image, s2.OriginalSize.Width + 4, 0);
+                        g.DrawImageUnscaled(s1.Image, s2.OriginalSize.Width + 8, 0);
                         break;
                     }
                 }
@@ -100,7 +100,7 @@ namespace MathDetecting.Algorithms.Segmentation
                     using (Graphics g = Graphics.FromImage(merged_image))
                     {
                         g.DrawImageUnscaled(s1.Image, 0, 0);
-                        g.DrawImageUnscaled(s2.Image, s2.OriginalSize.Width + 4, height / 2 - s2.OriginalSize.Height / 2);
+                        g.DrawImageUnscaled(s2.Image, s2.OriginalSize.Width + 8, height / 2 - s2.OriginalSize.Height / 2);
                         break;
                     }
                 }

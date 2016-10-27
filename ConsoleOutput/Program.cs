@@ -13,26 +13,17 @@ namespace ConsoleOutput
         static void Main()
         {
             List<Symbol> symbols = new List<Symbol>();
-            Bitmap image = Segmentation.CutText(new Bitmap("input.jpeg"));
+            Bitmap image = Segmentation.CutText(new Bitmap("input1.jpeg"));
             {
+                image = Segmentation.CutText(image);
                 Segmentation.CleanImage(image);
                 symbols = Segmentation.FullBruteSegmentation(image);
             }
-            int small = (image.Width * image.Height) / 15000;
-            for (int i = 1; i < symbols.Count; i++)
-            {
-                if (symbols[i].OriginalSize.Width < small && symbols[i].OriginalSize.Height < small)
-                {
-                    symbols[i - 1] = Symbol.Merge(symbols[i - 1], symbols[i], MergeDirection.Up);
-                    symbols.RemoveAt(i);
-                }
-            }
 
-            foreach (var symbol in symbols)
+            for (int i = 0; i < symbols.Count; i++)
             {
-                symbol.Image.Save(String.Format("Output\\x_{0}y_{1}({2}, {3}).png", symbol.X, symbol.Y, symbol.OriginalSize.Width, symbol.OriginalSize.Height));
+                symbols[i].Image.Save(String.Format("Output\\{4}--x_{0}y_{1}({2}, {3}).png", symbols[i].X, symbols[i].Y, symbols[i].OriginalSize.Width, symbols[i].OriginalSize.Height, i));
             }
-            //SymbolRecognition.Test();
 
             //Console.ReadKey();
         }

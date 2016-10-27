@@ -501,7 +501,38 @@ namespace MathDetecting.Algorithms.Segmentation
                     }
                 }
             }
+            MergeSmallComponents(symbols, bt.Width, bt.Height);
             return symbols;
+        }
+
+        /// <summary>
+        /// Merge small symbols (like dots)
+        /// </summary>
+        /// <param name="symbols">list of symbols</param>
+        /// <param name="width">original width of input image</param>
+        /// <param name="height">original height of input image</param>
+        private static void MergeSmallComponents(List<Symbol> symbols, int width, int height)
+        {
+            int small = (width * height) / 15000;
+            for (int i = 1; i < symbols.Count; i++)
+            {
+                if ((symbols[i].OriginalSize.Width <= small && symbols[i].OriginalSize.Height <= small
+                    && Math.Abs(symbols[i].X - symbols[i - 1].X) < symbols[i - 1].OriginalSize.Width / 2) 
+                    ||
+                    (Math.Abs(symbols[i - 1].X - symbols[i].X) <= small &&
+                    Math.Abs(symbols[i - 1].OriginalSize.Width - symbols[i].OriginalSize.Width) <= small &&
+                    Math.Abs(symbols[i - 1].OriginalSize.Height - symbols[i].OriginalSize.Height) <= small))
+                {
+                    MergeDirection direction;
+                    if (symbols[i].Y < symbols[i - 1].Y)
+                        direction = MergeDirection.Up;
+                    else direction = MergeDirection.Down;
+                    symbols[i - 1] = Symbol.Merge(symbols[i - 1], symbols[i], direction);
+                    symbols.RemoveAt(i);
+
+                    i--;
+                }
+            }
         }
     }
 }
